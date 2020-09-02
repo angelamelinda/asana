@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
+import { withRouter } from "react-router-dom";
+import queryString from "query-string";
 
-function App() {
+function App({ location }) {
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    let params = queryString.parse(location.search);
+    console.log(params.code);
+    handleAuthentication(params);
+  }, [location.search]);
+
   const handleOnClick = () => {
     const data = {
       submissionUrl:
@@ -26,11 +36,44 @@ function App() {
       .catch((err) => console.log(err));
   };
 
+  const handleAuthentication = async (params) => {
+    const url = `https://app.asana.com/-/oauth_token?grant_type=authorization_code&code=${params.code}&redirect_uri=https://b9e95ae39546.ngrok.io/&client_id=1191392742834152&client_secret=1b7e7a9c1473e5f4680401047a8e0c5e`;
+
+    await axios
+      .post(url)
+      .then((resp) => {
+        setToken(resp.access_token);
+      })
+      .catch((err) => {});
+  };
+
+  const handleSubmit = async () => {
+    const data = {
+      data: {
+        html_notes:
+          "<body>Mittens <em>really</em> likes the stuff from Humboldt.</body>",
+        name: "Buy catnip 000",
+        notes: "Mittens really likes the stuff from Humboldt.",
+      },
+    };
+
+    const url = "https://app.asana.com/api/1.0/tasks?projects=1191387689813121";
+
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    await axios.post(url, data, config).then(console.log).catch(console.log);
+  };
+
   return (
     <div className="App">
+      <a href="https://app.asana.com/-/oauth_authorize?response_type=code&client_id=1191392742834152&redirect_uri=https%3A%2F%2Fb9e95ae39546.ngrok.io%2F&state=<STATE_PARAM>">
+        buttton
+      </a>
       <button onClick={handleOnClick}>send</button>
+      <button onClick={handleSubmit}>submit</button>
     </div>
   );
 }
 
-export default App;
+export default withRouter(App);
