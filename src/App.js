@@ -33,7 +33,7 @@ function App({ location }) {
   const handleAuthentication = async () => {
     let params = queryString.parse(location.search);
     console.log(params.code);
-    const url = `https://app.asana.com/-/oauth_token?grant_type=authorization_code&code=${params.code}&redirect_uri=https://asana-ixoghn1mq.vercel.app/&client_id=1191392742834152&client_secret=1b7e7a9c1473e5f4680401047a8e0c5e`;
+    const url = `https://app.asana.com/-/oauth_token?grant_type=authorization_code&code=${params.code}&redirect_uri=https://asana.angelamelindatest.vercel.app/&client_id=1191392742834152&client_secret=1b7e7a9c1473e5f4680401047a8e0c5e`;
 
     await axios
       .post(url, null, {
