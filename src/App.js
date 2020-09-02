@@ -67,7 +67,7 @@ function App({ location }) {
 
   return (
     <div className="App">
-      <a href="https://app.asana.com/-/oauth_authorize?response_type=code&client_id=1191392742834152&redirect_uri=https://asana.angelamelindatest.vercel.app/&state=<STATE_PARAM>">
+      <a href="https://app.asana.com/-/oauth_authorize?response_type=code&client_id=1191392742834152&redirect_uri=https%3A%2F%2Fasana.angelamelindatest.vercel.app&state=<STATE_PARAM>">
         get code
       </a>
       <button onClick={handleAuthentication}>auth</button>
