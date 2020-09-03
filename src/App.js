@@ -84,6 +84,8 @@ function App({ location }) {
       </a>
       <button onClick={handleAuthentication}>auth</button>
       <button onClick={handleSubmit}>submit</button> */}
+      lalalla
+      {console.log(process.env)}
       {process.env.REACT_APP_SECRET}
     </div>
   );
