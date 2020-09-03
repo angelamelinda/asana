@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
+import asana from "asana";
 import { withRouter } from "react-router-dom";
 import queryString from "query-string";
 
 function App({ location }) {
   const [token, setToken] = useState("");
 
+  useEffect(() => {
+    console.log("here");
+    const client = asana.Client.create({
+      clientId: 1191392742834152,
+      clientSecret: "1b7e7a9c1473e5f4680401047a8e0c5e",
+      redirectUri: "http://localhost:3002",
+    });
+    client
+      .useOauth({
+        credentials: location.search.code,
+      })
+      .then((resp) => console.log);
+  }, []);
   // const handleOnClick = () => {
   //   const data = {
   //     submissionUrl:
@@ -33,7 +47,7 @@ function App({ location }) {
   const handleAuthentication = async () => {
     let params = queryString.parse(location.search);
     console.log(params.code);
-    const url = `https://app.asana.com/-/oauth_token?grant_type=authorization_code&code=${params.code}&redirect_uri=https://asana.angelamelindatest.vercel.app&client_id=1191392742834152&client_secret=1b7e7a9c1473e5f4680401047a8e0c5e`;
+    const url = `https://app.asana.com/-/oauth_token?grant_type=authorization_code&code=${params.code}&redirect_uri=http://localhost:3002&client_id=1191392742834152&client_secret=1b7e7a9c1473e5f4680401047a8e0c5e`;
 
     await axios
       .post(url, null, {
@@ -50,10 +64,8 @@ function App({ location }) {
   const handleSubmit = async () => {
     const data = {
       data: {
-        html_notes:
-          "<body>Mittens <em>really</em> likes the stuff from Humboldt.</body>",
+        html_notes: `<body>Mittens <em>really</em> likes the stuff from Humboldt.</body>`,
         name: "Buy catnip 000",
-        notes: "Mittens really likes the stuff from Humboldt.",
       },
     };
 
@@ -67,11 +79,12 @@ function App({ location }) {
 
   return (
     <div className="App">
-      <a href="https://app.asana.com/-/oauth_authorize?response_type=code&client_id=1191392742834152&redirect_uri=https%3A%2F%2Fasana.angelamelindatest.vercel.app&state=<STATE_PARAM>">
+      <a href="https://app.asana.com/-/oauth_authorize?response_type=id_token&client_id=1191392742834152&redirect_uri=http://localhost:3002&state=<STATE_PARAM>">
         get code
       </a>
       <button onClick={handleAuthentication}>auth</button>
       <button onClick={handleSubmit}>submit</button>
+      {process.env.REACT_APP_SECRET}
     </div>
   );
 }
